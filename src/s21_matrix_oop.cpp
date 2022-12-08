@@ -1,9 +1,11 @@
-#include "s21_matrix_oop.h";
+#include "s21_matrix_oop.h"
 
 using namespace src;
 
-void main(void) {
-
-    S21Matrix test = S21Matrix();
-    
+int main()
+{
+   S21Matrix test = S21Matrix(3, 5);
+   S21Matrix test1 = S21Matrix(test);
+   test1.PrintMatrix();
+   return 0;
 }
