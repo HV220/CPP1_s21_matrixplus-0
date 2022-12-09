@@ -2,6 +2,13 @@
 #define SRC_S21_MATRIX_OOP_H_
 #include <stdlib.h>
 #include <stdio.h>
+#include <cmath>
+#include <limits>
+#include <typeinfo>
+
+#define SUCCESS 0
+#define FAILURE 1
+#define INCORRECT 2
 
 namespace src
 {
@@ -87,10 +94,70 @@ namespace src
       return this->matrix_;
     }
 
-    void SumMatrix(const S21Matrix &other);
-    bool EqMatrix(const S21Matrix &other);
-    void SubMatrix(const S21Matrix &other);
-    void MulNumber(const double num);
+    void SumMatrix(const S21Matrix &other)
+    {
+      if (this->CompareMatrix(other) && this->EmptyMatrix(other))
+      {
+        for (int i = 0; i < this->rows_; i++)
+        {
+          for (int j = 0; j < this->cols_; j++)
+          {
+            this->matrix_[i][j] = (this->matrix_[i][j] + other.matrix_[i][j]);
+          }
+        }
+      }
+    }
+
+    bool EqMatrix(const S21Matrix &other)
+    {
+      int status = true;
+
+      if (!this->CompareMatrix(other))
+      {
+        status = false;
+        return status;
+      }
+
+      for (int i = 0; i < this->rows_; i++)
+      {
+        for (int j = 0; j < this->cols_; j++)
+        {
+          if (std::fabs(this->matrix_[i][j] - other.matrix_[i][j]) > std::numeric_limits<double>::epsilon())
+          {
+            status = false;
+          }
+        }
+      }
+
+      return status;
+    }
+    void SubMatrix(const S21Matrix &other)
+    {
+      if (this->CompareMatrix(other) && this->EmptyMatrix(other))
+      {
+        for (int i = 0; i < this->rows_; i++)
+        {
+          for (int j = 0; j < this->cols_; j++)
+          {
+            this->matrix_[i][j] = (this->matrix_[i][j] - other.matrix_[i][j]);
+          }
+        }
+      }
+    }
+
+    void MulNumber(const double num)
+    {
+      if (this->EmptyMatrix(*this))
+      {
+        for (int i = 0; i < this->rows_; i++)
+        {
+          for (int j = 0; j < this->cols_; j++)
+          {
+            this->matrix_[i][j] = num * this->matrix_[i][j];
+          }
+        }
+      }
+    }
     void MulMatrix(const S21Matrix &other);
     S21Matrix Transpose();
     S21Matrix CalcComplements();
@@ -100,13 +167,30 @@ namespace src
     void PrintMatrix()
     {
       double **arr = this->GetMatrix();
+
+      printf("\n--------------------------------\n");
+      printf("%s\n", typeid(this).name());
+
       for (int i = 0; i < this->GetRows(); i++)
       {
         for (int j = 0; j < this->GetCols(); j++)
           printf("%lf  ", arr[i][j]);
         printf("\n");
       }
+
+      printf("--------------------------------\n");
     };
+
+    void ChargeMatrix()
+    {
+      for (int i = 0; i < this->rows_; i++)
+      {
+        for (int y = 0; y < this->cols_; y++)
+        {
+          this->matrix_[i][y] = y + 1;
+        }
+      }
+    }
 
   private:
     int RealisationCalloc()
@@ -142,6 +226,31 @@ namespace src
           this->matrix_[i][y] = other.matrix_[i][y];
         }
       }
+    }
+
+    int CompareMatrix(const S21Matrix &other)
+    {
+      int status = 0;
+
+      if (this->cols_ == other.cols_ && this->rows_ == other.rows_)
+      {
+        status = 1;
+      }
+
+      return status;
+    }
+
+    int EmptyMatrix(const S21Matrix &other)
+    {
+      int status = 0;
+
+      if ((this->cols_ > 0) && (other.cols_ > 0) && (this->matrix_) &&
+          (other.matrix_))
+      {
+        status = 1;
+      }
+
+      return status;
     }
   };
 

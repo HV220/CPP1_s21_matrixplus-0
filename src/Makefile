@@ -6,11 +6,14 @@ LIBS = -lcheck
 LFLAGS = -fprofile-arcs -ftest-coverage
 OS = $(shell uname -s)
 
-all: build
+all: start clean
+
+start: build
+	./s21_matrix_oop
 
 build: s21_matrix_oop.cpp
-	$(g) $(flags) s21_matrix_oop.cpp -o s21_matrix_oop.out
+	$(g) $(flags) s21_matrix_oop.cpp -o s21_matrix_oop
 # test:
 # s21_matrix_oop.a: 
 clean:
-	rm *.out
+	rm -rf s21_matrix_oop *.out
